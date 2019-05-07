@@ -11,6 +11,7 @@ using namespace std;
 /* Abstract Instruction class */
 class Instruction {
 public:
+    int line_number;
     // Pure virtual functions
     virtual void createOpcode(void) = 0;
     virtual void print(void) = 0;

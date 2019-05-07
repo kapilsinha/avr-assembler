@@ -34,8 +34,10 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    /* Initialization of variables and structures */
     initInstructions();
 
+    /* Iterate over the lines to fill our vector<Line*> and symbol table */
     current_PC = 0;
     int line_number = 0;
     string line;
@@ -44,6 +46,14 @@ int main(int argc, char *argv[]) {
         parseLine(line, line_number);
     }
     inFile.close();
+
+    /* Iterate over vector<Line*> and create our opcodes */
+    current_PC = 0;
+    cout << "Vector<Line*>" << endl;
+    for(vector<Line*>::iterator it = lines.begin(); it != lines.end(); ++it) {
+        (*it)->getInstruction()->createOpcode();
+        current_PC += (*it)->getInstruction()->getSize();
+    }
     
     cout << "PC: " << current_PC << endl;
     print_symbol_table();

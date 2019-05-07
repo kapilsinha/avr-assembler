@@ -3,6 +3,9 @@
 
 // Map instruction string -> subclass e.g. ("add" -> AddInstruction)
 map<string, Instruction*> instruction_map;
+// Class encapsulating the functions used to transform operands into
+// our desired form
+TransformOperand *t = new TransformOperand();
 
 void initInstructions(void) {
     // TODO: Get rid of the if statements in makeInstruction and replace it
@@ -25,6 +28,7 @@ Instruction *makeInstruction(int line_number, LocPair instruction,
         string err_msg = "Invalid instruction";
         error(line_number, instruction.first, err_msg);
     }
+    instr->line_number = line_number;
     return instr;
 }
 
@@ -35,15 +39,18 @@ AddInstruction::AddInstruction(LocPair operand1, LocPair operand2) {
     this->operand2 = operand2;
 }
 
-// TODO: Actually implement this
 void AddInstruction::createOpcode(void) {
-    this->opcode = "1111111111111111";
+    string rd = t->transformGeneralRegister
+        (this->line_number, operand1.first, operand1.second);
+    string rr = t->transformGeneralRegister
+        (this->line_number, operand2.first, operand2.second);
+    this->opcode = "000011" + rr.substr(0, 1) + rd + rr.substr(1, rd.size() - 1);
 }
 
 void AddInstruction::print(void) {
     cout << this->name
          << "(" << this->operand1.second << " , " << this->operand2.second << ")"
-         << "[size = " << this->size << ", opcode = " << this->opcode << "]"
+         << " [size = " << this->size << ", opcode = " << this->opcode << "]"
          << endl;
 }
 
@@ -62,6 +69,6 @@ void SubInstruction::createOpcode(void) {
 void SubInstruction::print(void) {
     cout << this->name
          << "(" << this->operand1.second << " , " << this->operand2.second << ")"
-         << "[size = " << this->size << ", opcode = " << this->opcode << "]"
+         << " [size = " << this->size << ", opcode = " << this->opcode << "]"
          << endl;
 }
