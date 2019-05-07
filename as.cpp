@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     ifstream inFile(argv[1]);
 
     if (!inFile) {
-        cout << "Unable to open assembly file" << endl;
+        cout << "Error: Unable to open assembly file" << endl;
         exit(1);
     }
 
@@ -49,14 +49,14 @@ int main(int argc, char *argv[]) {
 
     /* Iterate over vector<Line*> and create our opcodes */
     current_PC = 0;
-    cout << "Vector<Line*>" << endl;
     for(vector<Line*>::iterator it = lines.begin(); it != lines.end(); ++it) {
         (*it)->getInstruction()->createOpcode();
         current_PC += (*it)->getInstruction()->getSize();
     }
     
-    cout << "PC: " << current_PC << endl;
+    cout << "Final PC: " << current_PC << endl << endl;
     print_symbol_table();
+    cout << endl;
     print_lines();
 
     return 0;

@@ -12,9 +12,9 @@ Line::Line(int line_number, string line_string, Instruction *instruction) {
 }
 
 void Line::print(void) {
-    cout << "Line " << this->line_number << ": " << this->line_string << "    ";
+    cout << "Line " << line_number << ": " << line_string << "    ";
     cout << "Instruction: ";
-    this->instruction->print();
+    instruction->print();
 }
 
 void parseLine(string line, int line_number) {
