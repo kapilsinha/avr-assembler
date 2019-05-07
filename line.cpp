@@ -58,6 +58,11 @@ void parseLine(string line, int line_number) {
                     error(line_number, loc, err_msg);
                 }
             }
+            // If the word starts with a ., it is a directive
+            else if (x[0] == '.') {
+                string err_msg = "Detected directive. Directives are not supported in this primitive assembler.";
+                error(line_number, loc, err_msg);
+            }
             // Else the word must be the instruction
             else {
                 instruction = make_pair (loc, x);

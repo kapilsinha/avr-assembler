@@ -62,7 +62,8 @@ int main(int argc, char *argv[]) {
 
     ofstream outFile;
     string inFilename (argv[1]);
-    outFile.open(inFilename.substr(0, inFilename.find('.')) + ".out");
+    string outFilename (inFilename.substr(0, inFilename.find('.')) + ".out");
+    outFile.open(outFilename);
     current_PC = 0;
     // Output: (PC [in hex]) (opcode [little-endian hex]) (original assembly line)
     for(vector<Line*>::iterator it = lines.begin(); it != lines.end(); ++it) {
@@ -72,6 +73,6 @@ int main(int argc, char *argv[]) {
         current_PC += (*it)->getInstruction()->getSize();
     }
     outFile.close();
-
+    cout << "Hex output written to " << outFilename << endl;
     return 0;
 }
