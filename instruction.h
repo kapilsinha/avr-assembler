@@ -24,6 +24,57 @@ public:
     virtual string getOpcode(void) = 0;
 };
 
+/* Abstract Instruction class that has no operands */
+class NoOpInstruction : public Instruction {
+public:
+    void print(void) {
+        cout << getName() << "()"
+             << " [size = " << getSize() << ", opcode = " << getOpcode() << "]"
+             << endl;
+    }
+};
+
+/* Abstract Instruction class that has one operand */
+class OneOpInstruction : public Instruction {
+private:
+    LocPair operand;
+public:
+    OneOpInstruction(LocPair operand) {
+        this->operand = operand;
+    }
+
+    LocPair getOperand(void) { return this->operand; }
+
+    void print(void) {
+        cout << getName()
+             << "(" << operand.second << ")"
+             << " [size = " << getSize() << ", opcode = " << getOpcode() << "]"
+             << endl;
+    }
+};
+
+/* Abstract Instruction class that has two operands */
+class TwoOpInstruction : public Instruction {
+private:
+    LocPair operand1;
+    LocPair operand2;
+public:
+    TwoOpInstruction(LocPair operand1, LocPair operand2) {
+        this->operand1 = operand1;
+        this->operand2 = operand2;
+    }
+
+    LocPair getOperand1(void) { return this->operand1; }
+    LocPair getOperand2(void) { return this->operand2; }
+
+    void print(void) {
+        cout << getName()
+             << "(" << operand1.second << " , " << operand2.second << ")"
+             << " [size = " << getSize() << ", opcode = " << getOpcode() << "]"
+             << endl;
+    }
+};
+
 // Create the instruction_map
 void initInstructions(void);
 // Create an Instruction subclass object
@@ -32,167 +83,171 @@ Instruction *makeInstruction(int line_number, LocPair instruction, LocPair opera
 
 /* ARITHMETIC AND LOGICAL (ALU) INSTRUCTIONS */
 
-class AddInstruction : public Instruction {
+class AddInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    AddInstruction(LocPair operand1, LocPair operand2);
+    AddInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "add";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class SubInstruction : public Instruction {
+class SubInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    SubInstruction(LocPair operand1, LocPair operand2);
+    SubInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "sub";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class AndInstruction : public Instruction {
+class AndInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    AndInstruction(LocPair operand1, LocPair operand2);
+    AndInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "and";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class OrInstruction : public Instruction {
+class OrInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    OrInstruction(LocPair operand1, LocPair operand2);
+    OrInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "or";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class EorInstruction : public Instruction {
+class EorInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    EorInstruction(LocPair operand1, LocPair operand2);
+    EorInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "eor";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class IncInstruction : public Instruction {
+class IncInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    IncInstruction(LocPair operand);
+    IncInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "inc";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class DecInstruction : public Instruction {
+class DecInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    DecInstruction(LocPair operand);
+    DecInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "dec";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class TstInstruction : public Instruction {
+class TstInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    TstInstruction(LocPair operand);
+    TstInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "tst";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class ClrInstruction : public Instruction {
+class ClrInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    ClrInstruction(LocPair operand);
+    ClrInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "clr";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class MulInstruction : public Instruction {
+class MulInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    MulInstruction(LocPair operand1, LocPair operand2);
+    MulInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "mul";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
@@ -201,193 +256,205 @@ public:
 
 /* BRANCH INSTRUCTIONS */
 
-class RjmpInstruction : public Instruction {
+class RjmpInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    RjmpInstruction(LocPair operand);
+    RjmpInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "rjmp";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class JmpInstruction : public Instruction {
+class JmpInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    JmpInstruction(LocPair operand);
+    JmpInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "jmp";
+        size = 4;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class RcallInstruction : public Instruction {
+class RcallInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    RcallInstruction(LocPair operand);
+    RcallInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "rcall";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class CallInstruction : public Instruction {
+class CallInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    CallInstruction(LocPair operand);
+    CallInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "call";
+        size = 4;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class RetInstruction : public Instruction {
+class RetInstruction : public NoOpInstruction {
 private:
     string name;
     int size;
     string opcode;
 
 public:
-    RetInstruction(void);
+    RetInstruction() {
+        name = "ret";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class RetiInstruction : public Instruction {
+class RetiInstruction : public NoOpInstruction {
 private:
     string name;
     int size;
     string opcode;
 
 public:
-    RetiInstruction(void);
+    RetiInstruction() {
+        name = "reti";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class CpInstruction : public Instruction {
+class CpInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    CpInstruction(LocPair operand1, LocPair operand2);
+    CpInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "cp";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class CpiInstruction : public Instruction {
+class CpiInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    CpiInstruction(LocPair operand1, LocPair operand2);
+    CpiInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "cpi";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class BreqInstruction : public Instruction {
+class BreqInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    BreqInstruction(LocPair operand);
+    BreqInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "breq";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class BrneInstruction : public Instruction {
+class BrneInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    BrneInstruction(LocPair operand);
+    BrneInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "brne";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class BrgeInstruction : public Instruction {
+class BrgeInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    BrgeInstruction(LocPair operand);
+    BrgeInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "brge";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class BrltInstruction : public Instruction {
+class BrltInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    BrltInstruction(LocPair operand);
+    BrltInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "brlt";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
@@ -396,167 +463,175 @@ public:
 
 /* DATA TRANSFER INSTRUCTIONS */
 
-class MovInstruction : public Instruction {
+class MovInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    MovInstruction(LocPair operand1, LocPair operand2);
+    MovInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "mov";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class LdiInstruction : public Instruction {
+class LdiInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    LdiInstruction(LocPair operand1, LocPair operand2);
+    LdiInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "ldi";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class LdsInstruction : public Instruction {
+class LdsInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    LdsInstruction(LocPair operand1, LocPair operand2);
+    LdsInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "lds";
+        size = 4;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class LdInstruction : public Instruction {
+class LdInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    LdInstruction(LocPair operand);
+    LdInstruction(LocPair operand) : OneOpInstruction(operand) {
+        // Note that this is the regular ld instruction 
+        // (no increment/decrement or displacement)
+        name = "ld";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class StsInstruction : public Instruction {
+class StsInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    StsInstruction(LocPair operand1, LocPair operand2);
+    StsInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "sts";
+        size = 4;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class StInstruction : public Instruction {
+class StInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    StInstruction(LocPair operand);
+    StInstruction(LocPair operand) : OneOpInstruction(operand) {
+        // Note that this is the regular st instruction 
+        // (no increment/decrement or displacement)
+        name = "st";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class InInstruction : public Instruction {
+class InInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    InInstruction(LocPair operand1, LocPair operand2);
+    InInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "in";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class OutInstruction : public Instruction {
+class OutInstruction : public TwoOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand1;
-    LocPair operand2;
     string opcode;
 
 public:
-    OutInstruction(LocPair operand1, LocPair operand2);
+    OutInstruction(LocPair operand1, LocPair operand2) : TwoOpInstruction(operand1, operand2) {
+        name = "out";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class PushInstruction : public Instruction {
+class PushInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    PushInstruction(LocPair operand);
+    PushInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "push";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class PopInstruction : public Instruction {
+class PopInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    PopInstruction(LocPair operand);
+    PopInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "pop";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
@@ -565,64 +640,69 @@ public:
 
 /* BIT AND BIT_TEST INSTRUCTIONS */
 
-class LslInstruction : public Instruction {
+class LslInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    LslInstruction(LocPair operand);
+    LslInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "lsl";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class LsrInstruction : public Instruction {
+class LsrInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    LsrInstruction(LocPair operand);
+    LsrInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "lsr";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class AsrInstruction : public Instruction {
+class AsrInstruction : public OneOpInstruction {
 private:
     string name;
     int size;
-    LocPair operand;
     string opcode;
 
 public:
-    AsrInstruction(LocPair operand);
+    AsrInstruction(LocPair operand) : OneOpInstruction(operand) {
+        name = "asr";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
 };
 
-class NopInstruction : public Instruction {
+class NopInstruction : public NoOpInstruction {
 private:
     string name;
     int size;
     string opcode;
 
 public:
-    NopInstruction(void);
+    NopInstruction() {
+        name = "nop";
+        size = 2;
+    }
     void createOpcode(void);
-    void print(void);
     string getName(void) { return this->name; }
     int getSize(void) { return this->size; }
     string getOpcode(void) { return this->opcode; }
