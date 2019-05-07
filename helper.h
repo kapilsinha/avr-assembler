@@ -8,6 +8,9 @@ typedef pair<int, string> LocPair;
 
 void error(int line_number, int loc, string msg);
 string decimal_to_binary(int n, int bits);
+string decimal_to_hex(int n);
+int hex_to_decimal(string n);
+string binary_to_hex(string n);
 
 /*
  * Class that encapsulates methods to transform operands from string to

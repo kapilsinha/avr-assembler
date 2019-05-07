@@ -708,10 +708,10 @@ StsInstruction::StsInstruction(LocPair operand1, LocPair operand2) {
 }
 
 void StsInstruction::createOpcode(void) {
-    string rd = t->transformGeneralRegister
-        (line_number, operand1.first, operand1.second);
     string immed = t->transformUnsignedImmediate
-        (line_number, operand2.first, operand2.second, 16);
+        (line_number, operand1.first, operand1.second, 16);
+    string rd = t->transformGeneralRegister
+        (line_number, operand2.first, operand2.second);
     opcode = "1001001" + rd + "0000" + immed;
 }
 

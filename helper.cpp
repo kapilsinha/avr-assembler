@@ -7,7 +7,7 @@ void error(int line_number, int loc, string msg) {
     exit(1);
 }
 
-string decimal_to_binary(int n, int bits){
+string decimal_to_binary(int n, int bits) {
     if (n < 0){ // check if negative and alter the number
         n += (1 << bits);
     }
@@ -20,6 +20,80 @@ string decimal_to_binary(int n, int bits){
         result = "0" + result;
     }
     return result.substr(result.size() - bits, result.size());
+}
+
+string decimal_to_hex(int n) {
+    // Assumes that n >= 0
+    string result = "";
+    while (n > 0) {
+        int x = n % 16;
+        if (x < 10)
+            result = to_string(x) + result;
+        else {
+            string y (1, 'a' + x - 10);
+            result = y + result;
+        }
+        n = n/16;
+    }
+    if (result.size() == 0) {
+        result = "0";
+    } 
+    return result;
+}
+
+/* 
+ * string n should not have a 0x prefix
+ * Ex: hex_to_decimal("a6") -> 166
+ * Returns -1 upon error - the calling function must handle this
+ */
+int hex_to_decimal(string n) {
+    int result = 0;
+    int i = n.size();
+    for (char &c : n) {
+        i--;
+        if (c - '0' >= 0 && c - '0' <= 9) {
+            result += (c - '0') * (1 << (i * 4));
+        }
+        else if (c - 'a' >= 0 && c - 'a' <= 5) {
+            result += (c - 'a' + 10) * (1 << (i * 4));
+        }
+        else {
+            result = -1;
+            break;
+        }
+    }
+    return result;
+}
+
+/*
+ * Converts a binary number (must have a multiple of 16 digits)
+ * NOTE: The output hex will be little-endian
+ * Ex: binary -> 91800060 -> 80 91 60 00
+ */
+string binary_to_hex(string n) {
+    if (n.size() > 16) {
+        return binary_to_hex(n.substr(0, 16))
+            + binary_to_hex(n.substr(16, n.size() - 16));
+    }
+    string result = "";
+    string temp = "";
+    int x;
+    for (int i = 0; i < (int) n.size(); i += 4) {
+        x = (n[i] - '0') * 8 + (n[i + 1] - '0') * 4
+            + (n[i + 2] - '0') * 2 + (n[i + 3] - '0');
+        if (x < 10) {
+            temp += to_string(x);
+        }
+        else {
+            string y (1, 'a' + x - 10);
+            temp += y;
+        }
+        if (temp.size() == 2) {
+            result = temp + " " + result;
+            temp = "";
+        }
+    }
+    return result;
 }
 
 /*
@@ -103,6 +177,9 @@ string TransformOperand::transformUnsignedImmediate(int line_number, int loc,
     try {
         if (immediate[0] == '$') {
             decimal = stoi(immediate.substr(1, immediate.size() - 1));
+        }
+        else if (immediate.substr(0, 2).compare("0x") == 0) {
+            decimal = hex_to_decimal(immediate.substr(2, immediate.size() - 2));
         }
         else {
             decimal = stoi(immediate);

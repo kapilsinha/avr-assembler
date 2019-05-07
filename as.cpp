@@ -54,10 +54,24 @@ int main(int argc, char *argv[]) {
         current_PC += (*it)->getInstruction()->getSize();
     }
     
+    /* Print out symbol table and lines for fun */
     cout << "Final PC: " << current_PC << endl << endl;
     print_symbol_table();
     cout << endl;
     print_lines();
+
+    ofstream outFile;
+    string inFilename (argv[1]);
+    outFile.open(inFilename.substr(0, inFilename.find('.')) + ".out");
+    current_PC = 0;
+    // Output: (PC [in hex]) (opcode [little-endian hex]) (original assembly line)
+    for(vector<Line*>::iterator it = lines.begin(); it != lines.end(); ++it) {
+        outFile << decimal_to_hex(current_PC) << ":\t";
+        outFile << binary_to_hex((*it)->getInstruction()->getOpcode()) << "\t";
+        outFile << (*it)->getLineString() << endl;
+        current_PC += (*it)->getInstruction()->getSize();
+    }
+    outFile.close();
 
     return 0;
 }

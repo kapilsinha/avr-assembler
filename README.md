@@ -2,7 +2,10 @@
 This is an implementation of a stripped down AVR assembler
 
 ## Supported Features
-* Full set of AVR operations
+* Large set of AVR instructions, including many
+	* Arithmetic and Logical Unit (ALU) instructions
+	* Branch instructions
+* Requires whitespace or comma separation between instructions and operands
 * No
     * Expressions
     * Directives
