@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     ofstream outFile;
     string inFilename (argv[1]);
-    string outFilename (inFilename.substr(0, inFilename.find('.')) + ".out");
+    string outFilename (inFilename.substr(0, inFilename.find('.')) + ".obj");
     outFile.open(outFilename);
     current_PC = 0;
     // Output: (PC [in hex]) (opcode [little-endian hex]) (original assembly line)
